@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlavorCraft — Discover & Cook Delicious Recipes</title>
+  <meta name="description" content="Find easy and delicious recipes by name, cuisine, diet, or ingredients in your kitchen. Featuring custom serving scaling and an integrated cooking timer.">
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+  <!-- App Container -->
+  <div class="app-layout">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-inner container">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" width="26" height="26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+              <line x1="6" y1="17" x2="18" y2="17"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">FlavorCraft</span>
+            <span class="brand-tagline">Recipe Finder & Kitchen Companion</span>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs" aria-label="Main Navigation">
+          <button class="nav-tab active" id="tabExplore" data-tab="explore">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+            <span>Explore</span>
+          </button>
+          <button class="nav-tab" id="tabPantry" data-tab="pantry">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>
+              <path d="M7 2v20"/>
+              <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+            </svg>
+            <span>Pantry Matcher</span>
+          </button>
+          <button class="nav-tab" id="tabFavorites" data-tab="favorites">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+            <span>Favorites</span>
+            <span class="badge" id="favoritesCount">0</span>
+          </button>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <button id="timerToggleBtn" class="btn-icon" title="Cooking Timer" aria-label="Toggle Cooking Timer">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span class="timer-bubble-status" id="timerBadge"></span>
+          </button>
+
+          <button id="themeToggleBtn" class="btn-icon" title="Toggle Theme" aria-label="Toggle Dark/Light Mode">
+            <span class="theme-icon dark-icon">🌙</span>
+            <span class="theme-icon light-icon">☀️</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- EXPLORE SECTION -->
+      <section id="sectionExplore" class="content-section active">
+        <!-- Hero Search Section -->
+        <div class="hero-section">
+          <div class="container hero-content">
+            <h1 class="hero-heading">What would you like to <span class="gradient-text">cook today?</span></h1>
+            <p class="hero-subheading">Browse our chef-crafted recipe library or discover global dishes in seconds.</p>
+
+            <!-- Search Bar Wrapper -->
+            <div class="search-bar-wrapper">
+              <div class="search-input-box">
+                <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  placeholder="Search recipes, ingredients, cuisines... (e.g. Pasta, Salmon, Tacos)" 
+                  autocomplete="off"
+                  aria-label="Search recipes"
+                >
+                <button id="clearSearchBtn" class="clear-search-btn" title="Clear search" aria-label="Clear search">×</button>
+              </div>
+
+              <!-- Live Global API Search Toggle -->
+              <div class="search-mode-toggle">
+                <label class="toggle-label" title="When enabled, also searches TheMealDB global library if not found locally">
+                  <input type="checkbox" id="globalApiToggle">
+                  <span class="toggle-slider"></span>
+                  <span class="toggle-text">Search Global Web (TheMealDB)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Quick Suggestion Pills -->
+            <div class="quick-tags">
+              <span class="quick-tag-label">Popular:</span>
+              <button class="quick-tag" data-tag="Pasta">🍝 Pasta</button>
+              <button class="quick-tag" data-tag="Chicken">🍗 Chicken</button>
+              <button class="quick-tag" data-tag="Quick & Easy">⚡ 15-Min</button>
+              <button class="quick-tag" data-tag="Vegetarian">🥗 Vegetarian</button>
+              <button class="quick-tag" data-tag="Dessert">🍰 Dessert</button>
+              <button class="quick-tag" data-tag="Healthy">🥑 Healthy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Control Toolbar -->
+        <div class="filter-toolbar container">
+          <!-- Meal Category Pills -->
+          <div class="category-scroll" id="categoryChips">
+            <button class="chip active" data-category="All">All Meals</button>
+            <button class="chip" data-category="Breakfast">🍳 Breakfast</button>
+            <button class="chip" data-category="Lunch">🥪 Lunch</button>
+            <button class="chip" data-category="Dinner">🍲 Dinner</button>
+            <button class="chip" data-category="Appetizers">🥟 Appetizers</button>
+            <button class="chip" data-category="Dessert">🍨 Dessert</button>
+          </div>
+
+          <!-- Secondary Filters Row -->
+          <div class="secondary-filters">
+            <div class="filter-item">
+              <label for="cuisineFilter">Cuisine</label>
+              <select id="cuisineFilter" class="filter-select">
+                <option value="All">All Cuisines</option>
+                <option value="Italian">Italian</option>
+                <option value="Mexican">Mexican</option>
+                <option value="Asian">Asian</option>
+                <option value="Mediterranean">Mediterranean</option>
+                <option value="Indian">Indian</option>
+                <option value="Modern Cafe">Modern Cafe</option>
+                <option value="French">French</option>
+              </select>
+            </div>
+
+            <div class="filter-item">
+              <label for="timeFilter">Max Cooking Time</label>
+              <select id="timeFilter" class="filter-select">
+                <option value="All">Any Duration</option>
+                <option value="15">≤ 15 mins (Super Fast)</option>
+                <option value="30">≤ 30 mins (Quick Weeknight)</option>
+                <option value="45">≤ 45 mins</option>
+              </select>
+            </div>
+
+            <div class="filter-item">
+              <label for="sortBy">Sort By</label>
+              <select id="sortBy" class="filter-select">
+                <option value="rating">Highest Rated</option>
+                <option value="time">Fastest First</option>
+                <option value="title">Alphabetical (A-Z)</option>
+                <option value="calories">Lowest Calories</option>
+              </select>
+            </div>
+
+            <button id="resetFiltersBtn" class="btn-text" title="Reset all filters">Reset</button>
+          </div>
+        </div>
+
+        <!-- Recipe Count & Results Info -->
+        <div class="container results-info">
+          <span id="resultsCountText">Showing 12 recipes</span>
+          <div id="loadingIndicator" class="loading-spinner hidden">
+            <div class="spinner"></div>
+            <span>Searching global recipe database...</span>
+          </div>
+        </div>
+
+        <!-- Recipe Cards Grid -->
+        <div class="container">
+          <div class="recipes-grid" id="recipesGrid">
+            <!-- Dynamic Recipe Cards Injected by JS -->
+          </div>
+
+          <!-- Empty State (Shown when no matching recipes) -->
+          <div id="emptyState" class="empty-state hidden">
+            <div class="empty-icon">🍳</div>
+            <h3>No recipes found</h3>
+            <p>Try searching for a different ingredient, clear your filters, or enable "Search Global Web".</p>
+            <button id="emptyResetBtn" class="btn btn-primary">Clear Filters</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANTRY MATCHER SECTION -->
+      <section id="sectionPantry" class="content-section">
+        <div class="container pantry-container">
+          <div class="pantry-header">
+            <h2>🥘 What's in Your Fridge?</h2>
+            <p>Select ingredients you have at home. We'll find recipes you can cook right now with minimal shopping!</p>
+          </div>
+
+          <!-- Quick Ingredients Selector -->
+          <div class="pantry-card">
+            <h3>1. Choose Your Ingredients</h3>
+            <div class="pantry-tags-wrapper" id="pantryIngredientsList">
+              <!-- Dynamically populated from COMMON_PANTRY_INGREDIENTS -->
+            </div>
+
+            <div class="custom-ingredient-row">
+              <input type="text" id="customIngredientInput" placeholder="Add another ingredient (e.g. Garlic, Bacon)...">
+              <button id="addCustomIngredientBtn" class="btn btn-secondary">Add</button>
+            </div>
+
+            <!-- Selected Ingredients Bar -->
+            <div class="selected-ingredients-box">
+              <div class="selected-header">
+                <span>Selected Ingredients (<span id="selectedPantryCount">0</span>):</span>
+                <button id="clearPantryBtn" class="btn-text">Clear All</button>
+              </div>
+              <div class="selected-tags" id="selectedPantryTags">
+                <span class="placeholder-tag">No ingredients selected yet. Tap tags above to add!</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pantry Matches Results -->
+          <div class="pantry-results-section">
+            <div class="pantry-results-header">
+              <h3>2. Matching Dishes</h3>
+              <span id="pantryMatchCountText">Select ingredients to view matches</span>
+            </div>
+            <div class="recipes-grid" id="pantryRecipesGrid">
+              <!-- Pantry matched recipes injected here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAVORITES SECTION -->
+      <section id="sectionFavorites" class="content-section">
+        <div class="container favorites-container">
+          <div class="favorites-header">
+            <h2>⭐ Your Saved Recipes</h2>
+            <p>Quick access to all your favorite dishes, saved right in your browser.</p>
+          </div>
+
+          <div class="recipes-grid" id="favoritesGrid">
+            <!-- Favorite recipes cards injected here -->
+          </div>
+
+          <div id="favoritesEmptyState" class="empty-state hidden">
+            <div class="empty-icon">📖</div>
+            <h3>No favorites saved yet</h3>
+            <p>Click the heart icon on any recipe card to save it here for quick cooking inspiration.</p>
+            <button class="btn btn-primary" onclick="switchTab('explore')">Explore Recipes</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- RECIPE DETAILS MODAL -->
+    <div id="recipeModal" class="modal-backdrop" aria-hidden="true" role="dialog">
+      <div class="modal-dialog">
+        <button id="modalCloseBtn" class="modal-close-btn" aria-label="Close recipe details">&times;</button>
+        
+        <div class="modal-content-scroll" id="modalContent">
+          <!-- Injected dynamically by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- FLOATING KITCHEN TIMER WIDGET -->
+    <div id="kitchenTimerWidget" class="timer-widget collapsed" aria-label="Kitchen Timer">
+      <div class="timer-widget-header" id="timerWidgetHeader">
+        <div class="timer-header-title">
+          <span class="timer-icon">⏱️</span>
+          <span class="timer-label">Kitchen Timer</span>
+        </div>
+        <div class="timer-compact-display" id="timerCompactDisplay">00:00</div>
+        <button id="timerMinimizeBtn" class="timer-minimize-btn" title="Minimize/Expand timer">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="timer-widget-body" id="timerWidgetBody">
+        <div class="timer-digital-display" id="timerDisplay">00:00</div>
+
+        <!-- Timer Presets -->
+        <div class="timer-presets">
+          <button class="timer-preset-btn" data-seconds="60">+1m</button>
+          <button class="timer-preset-btn" data-seconds="300">+5m</button>
+          <button class="timer-preset-btn" data-seconds="600">+10m</button>
+          <button class="timer-preset-btn" data-seconds="900">+15m</button>
+        </div>
+
+        <!-- Custom minute input -->
+        <div class="timer-custom-set">
+          <input type="number" id="timerCustomInput" placeholder="Mins" min="1" max="180">
+          <button id="timerSetCustomBtn" class="btn-xs">Set</button>
+        </div>
+
+        <!-- Timer Controls -->
+        <div class="timer-controls">
+          <button id="timerStartBtn" class="btn btn-primary btn-sm">Start</button>
+          <button id="timerPauseBtn" class="btn btn-secondary btn-sm" disabled>Pause</button>
+          <button id="timerResetBtn" class="btn btn-outline btn-sm">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="container footer-content">
+        <div class="footer-brand">
+          <strong>FlavorCraft</strong> — Handcrafted recipes & smart pantry cooking.
+        </div>
+        <div class="footer-meta">
+          <span>Made with pure HTML, CSS, and Vanilla JavaScript</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="recipes-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
